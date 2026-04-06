@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick Huang — Luxury Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --warm: #8b7355;
+    --parchment: #f5f0e8;
+    --cream: #faf7f2;
+    --mist: #e8e2d8;
+    --accent: #c9a96e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250, 247, 242, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(139, 115, 85, 0.12);
+  }
+
+  .nav-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 88px;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 64px 80px 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards 0.2s;
+  }
+
+  .eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--warm);
+  }
+
+  .hero-sub {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: #5a5248;
+    max-width: 400px;
+    margin-bottom: 52px;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 36px;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: var(--warm);
+  }
+
+  .btn-ghost {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    transition: color 0.3s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); }
+
+  .hero-right {
+    position: relative;
+    background: var(--parchment);
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 1.2s ease forwards 0.5s;
+  }
+
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 30% 20%, rgba(201,169,110,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(139,115,85,0.1) 0%, transparent 50%);
+  }
+
+  .hero-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .monogram {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18rem;
+    font-weight: 300;
+    color: rgba(139, 115, 85, 0.08);
+    line-height: 1;
+    user-select: none;
+  }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 48px;
+    left: 48px;
+    right: 48px;
+    display: flex;
+    gap: 40px;
+  }
+
+  .stat {
+    border-top: 1px solid var(--warm);
+    padding-top: 16px;
+    flex: 1;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  .lang-badge {
+    position: absolute;
+    top: 48px;
+    right: 48px;
+    border: 1px solid var(--accent);
+    padding: 10px 18px;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--mist), transparent);
+    margin: 0 80px;
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 120px 80px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .section-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    margin-top: 8px;
+  }
+
+  .about-content {}
+
+  .about-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 32px;
+    color: var(--ink);
+  }
+
+  .about-headline em {
+    font-style: italic;
+    color: var(--warm);
+  }
+
+  .about-body {
+    font-size: 0.88rem;
+    line-height: 2;
+    color: #5a5248;
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+
+  .pedigree {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pedigree-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    border: 1px solid var(--mist);
+    padding: 8px 16px;
+    background: var(--parchment);
+  }
+
+  /* SERVICES */
+  .services {
+    padding: 0 80px 120px;
+    background: var(--cream);
+  }
+
+  .services-header {
+    margin-bottom: 64px;
+  }
+
+  .services-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  .services-title em { font-style: italic; color: var(--warm); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--mist);
+  }
+
+  .service-card {
+    background: var(--cream);
+    padding: 52px 40px;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .service-card:hover {
+    background: var(--parchment);
+  }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--mist);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: #6b6158;
+    margin-bottom: 28px;
+  }
+
+  .service-detail {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 120px 80px;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .how-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 300;
+    margin-bottom: 72px;
+    color: var(--cream);
+  }
+
+  .how-title em { font-style: italic; color: var(--accent); }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 48px;
+  }
+
+  .how-step {}
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    letter-spacing: 0.1em;
+  }
+
+  .step-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-bottom: 14px;
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: rgba(245, 240, 232, 0.6);
+  }
+
+  .step-line {
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  /* WHO */
+  .who {
+    padding: 120px 80px;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .who-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 40px;
+    line-height: 1.2;
+  }
+
+  .who-title em { font-style: italic; color: var(--warm); }
+
+  .who-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .who-list li {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #5a5248;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .who-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .who-aside {
+    background: var(--parchment);
+    padding: 52px 40px;
+    border-left: 2px solid var(--accent);
+  }
+
+  .who-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .who-attribution {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 120px 80px;
+    background: var(--parchment);
+    text-align: center;
+  }
+
+  .contact-pre {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .contact-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .contact-title em { font-style: italic; color: var(--warm); }
+
+  .contact-sub {
+    font-size: 0.88rem;
+    color: #5a5248;
+    margin-bottom: 52px;
+    line-height: 1.8;
+  }
+
+  .contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .contact-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .contact-value {
+    font-size: 0.9rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .contact-value:hover { color: var(--warm); }
+
+  /* FOOTER */
+  footer {
+    padding: 28px 80px;
+    background: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: rgba(245, 240, 232, 0.5);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-tagline {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 232, 0.3);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 24px 40px; }
+    .hero-right { height: 300px; }
+    .about, .who { grid-template-columns: 1fr; padding: 80px 24px; gap: 40px; }
+    .section-label { writing-mode: horizontal-tb; transform: none; }
+    .services { padding: 0 24px 80px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .how { padding: 80px 24px; }
+    .how-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .contact { padding: 80px 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Patrick Huang</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="eyebrow">Luxury Advisory &amp; Client Strategy</p>
+    <h1 class="hero-title">
+      Where<br>
+      <em>Taste</em><br>
+      Meets<br>
+      Strategy
+    </h1>
+    <p class="hero-sub">
+      Fifteen years inside the world's most discerning brands — now brought to you, directly. Whether you're a luxury retailer rethinking your client experience, or an individual seeking a trusted guide through a pivotal transition.
+    </p>
+    <div class="cta-row">
+      <a href="#contact" class="btn-primary">Begin a Conversation</a>
+      <a href="#services" class="btn-ghost">View Services</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="monogram">PH</div>
+    </div>
+    <div class="lang-badge">English · 普通话</div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Years in Luxury</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Iconic Houses</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">HNW</div>
+        <div class="stat-label">Client Specialist</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="about reveal" id="about">
+  <div class="section-label">About</div>
+  <div class="about-content">
+    <h2 class="about-headline">
+      Insider knowledge.<br>
+      <em>Human perspective.</em>
+    </h2>
+    <p class="about-body">
+      I've spent over fifteen years at the intersection of luxury and human connection — at Louis Vuitton, Barneys New York, Saks Fifth Avenue, and Nordstrom. I've built client books from scratch, pioneered social commerce before it had a name, and guided thousands of high-net-worth clients through decisions that mattered to them.
+    </p>
+    <p class="about-body" style="margin-top: -24px;">
+      Today, I bring that fluency — in luxury culture, in client psychology, in cross-cultural relationship building — directly to brands and individuals who want more than a consultant. They want someone who has actually lived it.
+    </p>
+    <div class="pedigree">
+      <span class="pedigree-tag">Louis Vuitton</span>
+      <span class="pedigree-tag">Barneys New York</span>
+      <span class="pedigree-tag">Saks Fifth Avenue</span>
+      <span class="pedigree-tag">Nordstrom</span>
+      <span class="pedigree-tag">Mandarin Fluency</span>
+      <span class="pedigree-tag">AI Certified</span>
+      <span class="pedigree-tag">WeChat Commerce</span>
+      <span class="pedigree-tag">HNW Clienteling</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section class="services reveal" id="services">
+  <div class="services-header">
+    <h2 class="services-title">What I <em>Offer</em></h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3 class="service-name">Personal Shopping &amp; Style Advisory</h3>
+      <p class="service-desc">A trusted eye for individuals who value quality over quantity. I help discerning clients navigate luxury purchases, build coherent wardrobes, and make decisions they feel confident in — without the noise.</p>
+      <div class="service-detail">Retainer or Project Basis</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3 class="service-name">Luxury Brand Clienteling Strategy</h3>
+      <p class="service-desc">For boutiques and emerging luxury labels seeking to deepen client retention. I assess your client book, advise on relationship touchpoints, and help build systems that turn transactions into loyalty.</p>
+      <div class="service-detail">Fractional or Short-Term Engagement</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3 class="service-name">Chinese Market Access &amp; Cultural Bridge</h3>
+      <p class="service-desc">For brands looking to authentically reach Mandarin-speaking, Chinese-heritage clientele. I bring both the language and the cultural fluency to make those relationships real — not performative.</p>
+      <div class="service-detail">Strategic Advisory</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how reveal">
+  <h2 class="how-title">How It <em>Works</em></h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <div class="step-line"></div>
+      <div class="step-name">Conversation</div>
+      <p class="step-desc">We start with a no-pressure call to understand what you're navigating and where you want to be.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <div class="step-line"></div>
+      <div class="step-name">Assessment</div>
+      <p class="step-desc">I take an honest look at your situation — your clients, your gaps, your opportunities — and tell you what I actually see.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <div class="step-line"></div>
+      <div class="step-name">Proposal</div>
+      <p class="step-desc">A clear, tailored scope — no inflated retainers, no vague deliverables. Just exactly what will move the needle.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">04</div>
+      <div class="step-line"></div>
+      <div class="step-name">Partnership</div>
+      <p class="step-desc">We work together with full transparency. You'll always know where we are and what we're building toward.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who reveal">
+  <div>
+    <h2 class="who-title">
+      Who This<br>
+      Is <em>For</em>
+    </h2>
+    <ul class="who-list">
+      <li>Luxury boutiques and independent retailers who want to build genuine client loyalty, not just foot traffic</li>
+      <li>Emerging luxury or lifestyle brands entering the US market who need a trusted cultural interpreter</li>
+      <li>High-net-worth individuals who want a personal shopping relationship built on trust, not commission pressure</li>
+      <li>Luxury retail professionals navigating a career pivot who need honest, experienced guidance</li>
+      <li>Brands seeking authentic access to Mandarin-speaking and Chinese-heritage clientele</li>
+    </ul>
+  </div>
+  <div class="who-aside">
+    <p class="who-quote">"The best client relationships I've ever built started with someone who felt genuinely seen — not sold to."</p>
+    <p class="who-attribution">— Patrick Huang</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact reveal" id="contact">
+  <p class="contact-pre">Let's Talk</p>
+  <h2 class="contact-title">
+    Start with a<br>
+    <em>conversation.</em>
+  </h2>
+  <p class="contact-sub">No pitch decks. No intake forms. Just a real conversation about what you're working toward.</p>
+  <div class="contact-info">
+    <div class="contact-item">
+      <span class="contact-label">Email</span>
+      <a href="mailto:pat.huang@yahoo.com" class="contact-value">pat.huang@yahoo.com</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Phone</span>
+      <a href="tel:2129201595" class="contact-value">(212) 920-1595</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">LinkedIn</span>
+      <a href="https://linkedin.com/in/patrick-h-619a0057" target="_blank" class="contact-value">linkedin.com/in/patrick-h</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Instagram</span>
+      <a href="https://instagram.com/pattiecake.co" target="_blank" class="contact-value">@pattiecake.co</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">Patrick Huang — New York</div>
+  <div class="footer-tagline">Luxury Advisory · Client Strategy · Cultural Bridge</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
